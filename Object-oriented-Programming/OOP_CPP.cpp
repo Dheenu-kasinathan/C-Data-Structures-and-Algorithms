@@ -57,9 +57,7 @@ public:
         cout<<"Id: "<<id<<" "<<"Name: "<<name<<" "<<"Salary: "<<salary<<endl;
     }
     
-    
     friend void print_ss(student_0 ss);
-
 };
 
 /*
@@ -72,7 +70,7 @@ void print_ss(student_0 s){
 //--------------------------End of Class Student 0 -----------------------------------------------------
 
 
-//------------------------------- Class Box -----------------------------------------------------
+//------------------------------- Class Box ------------------------------------------------------------
 //member functions, static functions
 class Box{
 private:
