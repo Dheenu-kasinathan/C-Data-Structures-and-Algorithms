@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 int main(){
 
   //singleton* obj = singleton::getInstance();
