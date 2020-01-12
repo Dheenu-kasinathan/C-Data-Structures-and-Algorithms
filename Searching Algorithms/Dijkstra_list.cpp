@@ -1,68 +1,78 @@
-#include<iostream>
+#include <iostream>
 #include<vector>
+#include<stdio.h>
 #include<queue>
 
 using namespace std;
 
-# define INF 0x3f3f3f3f
+#define MAX_ 1000000
 
-typedef pair<int, int> iPair;
+typedef vector<pair<int,int>> node;
+typedef pair<int, int> pair_;
 
-void addEdge(vector <pair<int, int> > adj[], int u, int v, int wt) {
-    adj[u].push_back(make_pair(v, wt));
-    adj[v].push_back(make_pair(u, wt));
+
+void create_adj_list(node list[], int n, vector<int> from, vector<int> to, vector<int> weight){
+
+  for(int i =0; i< from.size(); i++){
+    list[from[i]].push_back({to[i],   weight[i]});
+    list[to[i]]  .push_back({from[i], weight[i]});
+  }
 }
 
+void dijk(int n, vector<int> from, vector<int> to, vector<int> weight){
 
-void shortestPath(vector<pair<int,int> > adj[], int V, int src) {
-    priority_queue< iPair, vector <iPair> , greater<iPair> > pq;
+  node list[n];
+  vector<int> dist(n, MAX_);
+  dist[0] = 0;
+  priority_queue< pair_, node, greater<pair_>> pq; //min queue
 
-    vector<int> dist(V, INF);
+  create_adj_list(list, n, from, to, weight);
 
-    pq.push(make_pair(0, src));
-    dist[src] = 0;
+  //print the adjaceny list
+  for(int i =0; i< n; i++){
+    cout<<i<<": ";
+    for(auto x: list[i]){
+      cout<<"{"<<x.first<<", "<<x.second<<"} ";
+    }
+    cout<<endl;
+  }
 
-    while (!pq.empty()){
-        int u = pq.top().second;
-        pq.pop();
+  pq.push({0,0});
 
-        for (auto x : adj[u]){
+  while(!pq.empty()){
 
-            int v = x.first;
-            int weight = x.second;
+    pair_ temp = pq.top();
+    pq.pop();
 
-            if (dist[v] > dist[u] + weight){
-                dist[v] = dist[u] + weight;
-                pq.push(make_pair(dist[v], v));
-            }
-        }
+    int u = temp.second;
+
+    for(auto x: list[u]){
+      int v = x.first;
+      int w = x.second;
+
+      if(dist[v] > dist[u] + w){
+        dist[v] = dist[u] + w;
+        pq.push({dist[v], v});
+      }
     }
 
-    printf("Vertex Distance from Source\n");
-    for (int i = 0; i < V; ++i)
-        printf("%d \t\t %d\n", i, dist[i]);
+  }
+
+  cout<<"Vertex Distance from source "<<endl;
+
+  for(int i =0; i< n; i++)
+    cout<<i <<"  "<<dist[i]<<endl;
+
 }
 
 int main() {
-    int V = 9;
-    vector<iPair > adj[V];
 
-    addEdge(adj, 0, 1, 4);
-    addEdge(adj, 0, 7, 8);
-    addEdge(adj, 1, 2, 8);
-    addEdge(adj, 1, 7, 11);
-    addEdge(adj, 2, 3, 7);
-    addEdge(adj, 2, 8, 2);
-    addEdge(adj, 2, 5, 4);
-    addEdge(adj, 3, 4, 9);
-    addEdge(adj, 3, 5, 14);
-    addEdge(adj, 4, 5, 10);
-    addEdge(adj, 5, 6, 2);
-    addEdge(adj, 6, 7, 1);
-    addEdge(adj, 6, 8, 6);
-    addEdge(adj, 7, 8, 7);
+  int g_nodes = 9;
+  vector<int> g_from   {0, 0, 1,  1, 2, 2, 2, 3,  3,  4,  5, 6, 6, 7};
+  vector<int> g_to     {1, 7, 2,  7, 3, 8, 5, 4,  5,  5,  6, 7, 8, 8};
+  vector<int> g_weight {4, 8, 8, 11, 7, 2, 4, 9, 14, 10,  2, 1, 6, 7};
 
-    shortestPath(adj, V, 0);
+  dijk(g_nodes, g_from, g_to, g_weight);
 
-    return 0;
+	return 0;
 }
