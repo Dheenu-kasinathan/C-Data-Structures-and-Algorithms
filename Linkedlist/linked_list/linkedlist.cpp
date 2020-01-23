@@ -55,7 +55,7 @@ void linked_list::deletebyvalue(int v){
       break;
     }
     else if(temp->next->val == v){
-      temp -> next = temp ->next->next;
+      temp->next = temp->next->next;
       break;
     }
     else

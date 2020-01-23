@@ -20,9 +20,11 @@ int main(){
 
   int* arr3 = (int*)malloc(sizeof(8));
   arr3[7] = 10;
-  cout<<arr3[8]<<endl;
+  cout<<"pointer size: "<<sizeof(arr3)<<endl;
+  //for(int i =0; i<arr3.size(); i++)
+  //  cout<<arr3[i]<<" ";
+  cout<<"array: "<<arr3[9]<<endl;
 
-  cout<<"testing: GIT History" <<endl
 
 
   return 0;

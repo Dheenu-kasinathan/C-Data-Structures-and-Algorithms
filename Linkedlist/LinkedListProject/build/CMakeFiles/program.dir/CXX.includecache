@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/LinkedListProject/LinkedList.h
+stdio.h
+-
+iostream
+-
+string
+-
+vector
+-
+
+/Users/dheenu/Desktop/git-repo/Data-Structures-and-Algorithms/Linkedlist/LinkedListProject/src/linkedlist.cpp
+LinkedListProject/LinkedList.h
+-
+
