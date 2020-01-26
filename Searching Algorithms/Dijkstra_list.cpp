@@ -1,69 +1,91 @@
 #include <iostream>
-#include<vector>
-#include<stdio.h>
-#include<queue>
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+#include <algorithm>
+
+#define MAX_ 100000
 
 using namespace std;
 
-#define MAX_ 1000000
-
-typedef vector<pair<int,int>> node;
-typedef pair<int, int> pair_;
-
-
-void create_adj_list(node list[], int n, vector<int> from, vector<int> to, vector<int> weight){
-
-  for(int i =0; i< from.size(); i++){
-    list[from[i]].push_back({to[i],   weight[i]});
-    list[to[i]]  .push_back({from[i], weight[i]});
+void create_list(vector<vector<pair<int,int>>> &list,vector<int> &from, vector<int> &to, vector<int> &weight){
+  for(int i = 0; i < from.size(); i++){
+    list[from[i]].push_back({to[i], weight[i]});
+    list[to[i]].push_back({from[i], weight[i]});
   }
 }
 
-void dijk(int n, vector<int> from, vector<int> to, vector<int> weight){
 
-  node list[n];
-  vector<int> dist(n, MAX_);
-  dist[0] = 0;
-  priority_queue< pair_, node, greater<pair_>> pq; //min queue
+void dijkstra(int n, vector<int> &from, vector<int> &to, vector<int> &weight){
 
-  create_adj_list(list, n, from, to, weight);
+  vector<vector<pair<int,int>>> list (n);
+  create_list(list,from, to, weight);
+  int i = 0;
 
-  //print the adjaceny list
-  for(int i =0; i< n; i++){
-    cout<<i<<": ";
-    for(auto x: list[i]){
-      cout<<"{"<<x.first<<", "<<x.second<<"} ";
+  for(auto row: list){
+    cout<<i<<"  ->  ";
+    for (auto val : row){
+      cout<<"{"<<val.first<<","<<val.second<<"}   ";
     }
+    i++;
     cout<<endl;
   }
 
-  pq.push({0,0});
+  vector<int> distance (n, MAX_);
+  distance[0] = 0;
 
-  while(!pq.empty()){
+  priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > q;
 
-    pair_ temp = pq.top();
-    pq.pop();
+  q.push({0,0});
 
-    int u = temp.second;
+  //parent
+  unordered_map<int,int> parent;
+  parent[0] = 0;
 
-    for(auto x: list[u]){
-      int v = x.first;
-      int w = x.second;
+  while(!q.empty()){
 
-      if(dist[v] > dist[u] + w){
-        dist[v] = dist[u] + w;
-        pq.push({dist[v], v});
+    pair<int,int> cur = q.top();
+    q.pop();
+
+    int cur_weight = cur.first;
+    int cur_node = cur.second;
+
+    for(auto next_node: list[cur_node]){
+
+      int new_to = next_node.first;
+      int new_weight = next_node.second;
+
+      if(distance[new_to] > (new_weight+distance[cur_node])){
+        distance[new_to] = new_weight + distance[cur_node];
+        q.push({distance[new_to], new_to});
+        parent[new_to] = cur_node;
       }
     }
+  }
+  cout<<"Vertex Distance from source "<<endl;
+  for(int i =0; i< n; i++)
+    cout<<i <<"  "<<distance[i]<<" Parent: "<<parent[i]<<endl;
+
+  cout<<"Root from 0 to 4: ";
+  vector<int> route;
+  int end = 4;
+  int start = 0;
+  route.push_back(end);
+  while(true){
+    int p = parent[end];
+    if(p == start)
+      break;
+    route.push_back(p);
+    end = p;
 
   }
-
-  cout<<"Vertex Distance from source "<<endl;
-
-  for(int i =0; i< n; i++)
-    cout<<i <<"  "<<dist[i]<<endl;
+  //reverse(route.begin(), route.end());
+  for(auto path: route)
+    cout<< path <<" ";
 
 }
+
 
 int main() {
 
@@ -72,7 +94,7 @@ int main() {
   vector<int> g_to     {1, 7, 2,  7, 3, 8, 5, 4,  5,  5,  6, 7, 8, 8};
   vector<int> g_weight {4, 8, 8, 11, 7, 2, 4, 9, 14, 10,  2, 1, 6, 7};
 
-  dijk(g_nodes, g_from, g_to, g_weight);
+  dijkstra(g_nodes, g_from, g_to, g_weight);
 
 	return 0;
 }
