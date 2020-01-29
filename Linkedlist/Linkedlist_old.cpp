@@ -1,110 +1,129 @@
-
 #include <iostream>
-#include<stdio.h>
+#include  <stdio.h>
+#include <vector>
+#include <memory>
 
 using namespace std;
 
-class Node{
-public:
-    int data;
-    Node *next;
+struct node{
+  int val;
+  node* next;
 };
 
-class linked_list{
+class linkedlist{
 private:
-    Node *head, *tail;
+  node* head;
+  node* tail;
+
 public:
-    linked_list(){
-        head = NULL;
-        tail = NULL;
-    }
-    void create_node(int data);
-    void print_list();
-    void delete_position(int pos);
-    void delete_by_node_value(int val);
-    void reverse();
-    
+  linkedlist();
+  void add (int val);
+  node* create_node(int val);
+  void print();
+  void reverse();
+  void delete_val(int val);
 };
 
-void linked_list::create_node(int data){
-    Node *temp = new Node;
-    temp -> data = data;
-    temp -> next = NULL;
-    if(head == NULL){
-        head = temp;
-        tail = temp;
-    }
-    else{
-        tail -> next = temp;
-        tail = temp;
-    }
+linkedlist::linkedlist() {
+  head = nullptr;
+  tail = nullptr;
 }
 
-void linked_list::delete_position(int pos){
-    Node *cur;
-    Node *prev;
-    cur =  head;
-    prev = head;
-    for(int i=1; i<pos;i++){
-        prev = cur;
-        cur = cur -> next;
-    }
-    cur = cur -> next;
-    prev -> next = cur;
+node* linkedlist::create_node(int val){
+  node* temp = new node;
+  temp->val = val;
+  temp->next = nullptr;
+  return temp;
 }
 
-void linked_list::delete_by_node_value(int val){
-    Node *cur;
-    Node *prev;
-    Node *temp;
-    cur =  head;
-    prev = head;
-    temp = head;
-    
-    while( temp != NULL){
-        if( temp->data == val){
-            cur = cur -> next;
-            prev -> next = cur;
-        }
-        else{
-            prev = cur;
-            cur = cur->next;
-        }
-        temp = temp -> next;
-    }
+void linkedlist::add(int val){
+  node* new_node = create_node(val);
+  if(!head){
+    head = new_node;
+    tail = head;
+  }
+  else{
+    tail->next = new_node;
+    tail = tail->next;
+  }
 }
 
-void linked_list::reverse(){ 
-    Node *cur = NULL;
-    while(head){
-        Node* temp = head -> next;
-        head -> next = cur;
-        cur = head;
-        head = temp;
+void linkedlist::reverse(){
+  node* cur = head;
+  node* post = head;
+  node* prev = nullptr;
+
+  if(!head->next)
+    return;
+  else{
+    tail = head;
+    while(cur){
+      post = cur->next;
+      cur->next = prev;
+      prev = cur;
+      cur = post;
     }
+    head = prev;
+  }
+
+  cout<<"List reversed: ";
+  this->print();
 }
 
-void linked_list::print_list(){
-    Node *temp;
-    temp = head;
-    while(temp != NULL){
-        cout << temp->data <<" ";
-        temp = temp->next;
-    }
+void linkedlist::delete_val(int val){
+
+  while(head && (head->val==val))
+    head = head->next;
+
+  if(!head)
+    return;
+
+  node* ptr = head->next;
+  node* prev = head;
+  while(ptr){
+
+    if(ptr->val == val)
+      prev->next = ptr->next;
+    else
+      prev = ptr;
+
+    ptr = ptr->next;
+  }
+
+  cout<<"List after deletion: ";
+  this->print();
+}
+
+void linkedlist::print(){
+  node* ptr = head;
+  while(ptr){
+    cout<<ptr->val<<" ";
+    ptr=ptr->next;
+  }
+  cout<<endl;
 }
 
 
 int main(){
-    linked_list list;
-    
-    for(int i=1; i<=10; i++){
-        list.create_node(i);
-    }
-    //list.delete_position(10);
-    //list.delete_by_node_value(7);
-    //list.reverse();
-    
-    list.print_list();
-    cout<<endl;
-    return 0;
+
+  //unique_ptr<linkedlist> list = make_unique<linkedlist>();
+  unique_ptr<linkedlist> list (new linkedlist);
+
+  //linkedlist list;
+
+  vector<int> seq = {1,2,3,4,5,6,7,8,9,10};
+
+  for(auto val: seq)
+    list->add(val);
+
+  cout<<"Initial list: ";
+  list->print();
+
+  list->reverse();
+  list->reverse();
+
+  list->delete_val(10);
+
+
+  return 0;
 }

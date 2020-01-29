@@ -34,7 +34,7 @@ public:
   }
 
   //override keyword is used for silly mistakes while calling the functions
-  //like void print(int a), 
+  //like void print(int a),
   void print() override{
     cout<<"Print Derived 1"<<endl;
   }
@@ -123,6 +123,8 @@ int main(){
   b = &d2;
   b->print();
   b->show();
+
+
 
   return 0;
 }
