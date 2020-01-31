@@ -35,6 +35,8 @@ public:
   bool findelemet(int val);
   void getMinMaxDepth();
   void invert();
+  void delete(int val);
+  node* minValueNode(node* ptr);
 };
 int binarytree::minDepth = 0;
 int binarytree::maxDepth = 0;
@@ -255,9 +257,27 @@ void binarytree::invert(){
         q.push(temp->right);
       swap(temp->left, temp->right);
     }
-
-
   }
+}
+
+node* minValueNode(node* ptr){
+
+  node* temp = ptr;
+
+  if(temp && temp->left)
+    temp = temp->left;
+
+  return temp;
+}
+//need to complete
+void binarytree::delete(int val){
+
+  if(!root)
+    return root;
+
+  node* ptr = root;
+
+
 }
 
 int main(){
@@ -309,6 +329,9 @@ int main(){
 
   cout<<"Min depth and Max Depth: ";
   tree->getMinMaxDepth();
+
+  int del_val = 5;
+  tree->delete(delete_val);
 
   tree->invert();
   vector<vector<int>> inverted = tree->levelorder();

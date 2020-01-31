@@ -1,75 +1,64 @@
 #include <iostream>
+#include <stdio.h>
+#include <vector>
+
 using namespace std;
 
-void merge(int arr[], int l, int m, int r){
-    int i,j,k;
-    
-    int n1 = m - l + 1;
-    int n2 =  r - m;
-    
-    int L[n1], R[n2];
-    
-    for (i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[m + 1+ j];
-    
-    i = 0;
-    j = 0;
-    k = l;
-    while (i < n1 && j < n2)
-    {
-        if (L[i] <= R[j])
-        {
-            arr[k] = L[i];
-            i++;
-        }
-        else
-        {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-    
-    while (i < n1)
-    {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    
-    while (j < n2)
-    {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+void merge(vector<int> &arr, int left, int mid, int right){
+
+  vector<int> left_array (mid-left+1,0);
+  vector<int> right_array (right-mid,0);
+
+  for(int i = 0; i < left_array.size(); i++)
+    left_array[i] = arr[left+i];
+
+  for(int i = 0; i <right_array.size(); i++)
+    right_array[i] = arr[mid+1+i];
+
+  int i = 0;
+  int j = 0;
+
+  int ptr = left;
+
+  while( (i<left_array.size()) && (j<right_array.size()) ){
+    if(left_array[i] <= right_array[j])
+      arr[ptr++] = left_array[i++];
+    else
+      arr[ptr++] = right_array[j++];
+  }
+
+  while (i < left_array.size())
+    arr[ptr++] = left_array[i++];
+
+  while(j < right_array.size())
+    arr[ptr++] = right_array[j++];
+
 }
 
-void mergesort(int arr[], int l,int  r){
-    if (l < r){
-        int m = (l+r)/2;
-        
-        mergesort(arr, l, m);
-        
-        mergesort(arr, m+1, r);
-        
-        merge(arr,l,m,r);
-    }
+void mergesort(vector<int> &arr, int left, int right){
+
+  if(left < right){
+
+    int mid = left + (right-left)/2;
+
+    mergesort(arr, left, mid);
+    mergesort(arr, mid+1, right);
+
+    merge(arr, left, mid, right);
+  }
 }
 
-int main() {
-    int arr[] = {38,27,43,3,9,82,10};
-    int arrsize = sizeof(arr)/sizeof(arr[0]);
-    cout << arrsize <<endl;
-    
-    mergesort(arr, 0, arrsize-1);
-    
-    for (int i =0 ; i < arrsize; i++){
-        cout<<arr[i]<<"\t";
-    }
-    cout<<endl;
-    
-    return 0;
+
+int main(){
+
+  vector<int> arr = {3,5,9,1,7,6,8,2,4,0};
+
+  mergesort(arr, 0, arr.size()-1);
+
+  cout<<"Sorted array: ";
+  for(auto val: arr)
+    cout<<val<<" ";
+  cout<<endl;
+
+  return 0;
 }
